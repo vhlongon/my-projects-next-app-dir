@@ -8,7 +8,11 @@ const inter = Inter({ subsets: ['latin'] });
 // so that the page will be rendered with the data
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const getData = async () => {
-  const res = await fetch('https://www.reddit.com/.json');
+  const res = await fetch('https://www.reddit.com/.json', {
+    // by default it will cache the response
+    // this for example will make sure it is always making a request to the server
+    cache: 'no-store',
+  });
   await sleep(2000);
   return await res.json();
 };
