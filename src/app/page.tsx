@@ -4,7 +4,20 @@ import styles from './page.module.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default function Home() {
+// this will make the page wait for 2 seconds before rendering since it is a server side component
+// so that the page will be rendered with the data
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const getData = async () => {
+  const res = await fetch('https://www.reddit.com/.json');
+  await sleep(2000);
+  return await res.json();
+};
+
+// with server side components you can use async/await for those components
+export default async function Home() {
+  const { data } = await getData();
+  const firstFivePost = data.children.slice(0, 1);
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
@@ -43,6 +56,21 @@ export default function Home() {
         <div className={styles.thirteen}>
           <Image src="/thirteen.svg" alt="13" width={40} height={31} priority />
         </div>
+      </div>
+
+      <div className={styles.grid}>
+        {firstFivePost.map(post => (
+          <div key={post.data.id} className={styles.card}>
+            <h3>{post.data.title}</h3>
+            <a
+              target="_blank"
+              href={`https://reddit.com/${post.data.subreddit_name_prefixed}`}
+            >
+              go to page
+            </a>
+            <p>{post.data.author}</p>
+          </div>
+        ))}
       </div>
 
       <div className={styles.grid}>
