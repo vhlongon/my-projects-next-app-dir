@@ -5,14 +5,17 @@ export const metadata = {
   description: 'Cool stuff',
 };
 
-export default function RootLayout({
-  children,
-}: {
+interface LayoutProps {
   children: React.ReactNode;
-}) {
+}
+
+export default function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <div>extra content in root layout</div>
+        {children}
+      </body>
     </html>
   );
 }
