@@ -14,12 +14,15 @@ const getData = async () => {
     cache: 'no-store',
   });
   await sleep(2000);
+  // throw new Error('This is an error');
+
   return await res.json();
 };
 
 // with server side components you can use async/await for those components
 export default async function Home() {
   const { data } = await getData();
+  // @ts-ignore
   const firstFivePost = data.children.slice(0, 1);
 
   return (
@@ -63,18 +66,27 @@ export default async function Home() {
       </div>
 
       <div className={styles.grid}>
-        {firstFivePost.map(post => (
-          <div key={post.data.id} className={styles.card}>
-            <h3>{post.data.title}</h3>
-            <a
-              target="_blank"
-              href={`https://reddit.com/${post.data.subreddit_name_prefixed}`}
-            >
-              go to page
-            </a>
-            <p>{post.data.author}</p>
-          </div>
-        ))}
+        {firstFivePost.map(
+          (post: {
+            data: {
+              id: string;
+              title: string;
+              author: string;
+              subreddit_name_prefixed: string;
+            };
+          }) => (
+            <div key={post.data.id} className={styles.card}>
+              <h3>{post.data.title}</h3>
+              <a
+                target="_blank"
+                href={`https://reddit.com/${post.data.subreddit_name_prefixed}`}
+              >
+                go to page
+              </a>
+              <p>{post.data.author}</p>
+            </div>
+          )
+        )}
       </div>
 
       <div className={styles.grid}>
