@@ -12,10 +12,7 @@ interface LayoutProps {
 export default function RootLayout({ children }: LayoutProps) {
   return (
     <html lang="en">
-      <body>
-        <div>extra content in root layout</div>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

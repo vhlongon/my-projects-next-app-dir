@@ -1,23 +1,38 @@
 'use client';
 
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import React from 'react';
+import { useState } from 'react';
 
 const ContactPage = () => {
-  const router = useRouter();
+  const [res, setRes] = useState('');
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const formData = Object.fromEntries(
+      new FormData(e.currentTarget).entries()
+    );
+
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      body: JSON.stringify(formData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const { data } = await res.json();
+
+    setRes(data);
+  };
 
   return (
-    <>
-      <div>ContactPage</div>
-      <Link href="/">home</Link>
-      <Link href="/blog/123">blog 123</Link>
-      <div>
-        <button onClick={() => router.push('/')}>
-          got to home button with push
-        </button>
-      </div>
-    </>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="email">Email</label>
+        <input type="email" id="email" name="email" />
+        <button type="submit">Send</button>
+      </form>
+      {res && <p>{res}</p>}
+    </div>
   );
 };
 

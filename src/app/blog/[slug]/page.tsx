@@ -1,3 +1,5 @@
+import { getAllPosts } from '@/lib/cms';
+
 interface BlogPageProps {
   params: {
     slug: string;
@@ -9,7 +11,12 @@ export const generateMetadata = async (metadata: BlogPageProps) => ({
 });
 
 export const generateStaticParams = async () => {
-  return [{ slug: ['test'] }, { slug: ['test2'] }, { slug: ['test3'] }];
+  const posts = await getAllPosts();
+
+  const slugs = posts.map(post => ({
+    slug: post.slug,
+  }));
+  return slugs;
 };
 
 const BlogPage = ({ params }: BlogPageProps) => {
